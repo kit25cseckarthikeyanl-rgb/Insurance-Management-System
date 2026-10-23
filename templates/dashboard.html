@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block heading %}Dashboard{% endblock %}
+{% block content %}
+<section class="welcome"><div><span class="welcome-tag">OVERVIEW</span><h2>Good day, Administrator 👋</h2><p>Here’s what’s happening across your insurance portfolio.</p></div><div class="welcome-art">✦</div></section>
+<section class="stats-grid">
+  <article class="stat-card"><div class="stat-icon purple">♙</div><span>Total Customers</span><strong>{{ stats.customers }}</strong><small>Registered customers</small></article>
+  <article class="stat-card"><div class="stat-icon blue">▤</div><span>Total Policies</span><strong>{{ stats.policies }}</strong><small>All insurance policies</small></article>
+  <article class="stat-card"><div class="stat-icon green">✓</div><span>Active Policies</span><strong>{{ stats.active }}</strong><small>Currently in effect</small></article>
+  <article class="stat-card"><div class="stat-icon orange">◈</div><span>Total Claims</span><strong>{{ stats.claims }}</strong><small>Claims submitted</small></article>
+</section>
+<section class="content-card"><div class="section-head"><div><h3>Recent Claims</h3><p>Latest claim activity in the system</p></div><a class="btn btn-primary" href="{{ url_for('claims') }}">Manage claims ↗</a></div>
+<div class="table-wrap"><table><thead><tr><th>CLAIM ID</th><th>CUSTOMER</th><th>POLICY</th><th>CLAIM DATE</th><th>AMOUNT</th><th>STATUS</th></tr></thead><tbody>
+{% for row in recent %}<tr><td class="muted">#CL-{{ "%03d"|format(row.id) }}</td><td class="strong">{{ row.full_name }}</td><td>{{ row.policy_name }}</td><td>{{ row.claim_date }}</td><td class="strong">₹{{ "%.2f"|format(row.amount) }}</td><td><span class="badge {{ row.status|lower }}">{{ row.status }}</span></td></tr>
+{% else %}<tr><td colspan="6" class="empty">No claims yet. Add a claim to get started.</td></tr>{% endfor %}
+</tbody></table></div></section>
+<section class="quick-grid"><a href="{{ url_for('customers') }}" class="quick-card"><span class="quick-icon">＋</span><div><strong>Manage Customers</strong><small>Add or view customer records</small></div><span class="arrow">→</span></a><a href="{{ url_for('policies') }}" class="quick-card"><span class="quick-icon teal">▤</span><div><strong>Manage Policies</strong><small>Create and track insurance policies</small></div><span class="arrow">→</span></a></section>
+{% endblock %}

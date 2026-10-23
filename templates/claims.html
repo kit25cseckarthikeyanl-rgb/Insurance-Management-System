@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Claims{% endblock %}{% block heading %}Insurance Claims{% endblock %}
+{% block content %}
+<div class="page-intro"><p>Submit claims and update their processing status.</p></div>
+<section class="content-card form-card"><div class="section-head"><div><h3>Submit New Claim</h3><p>Enter the incident and claim details</p></div><span class="mini-label">CLAIM FORM</span></div>
+{% if policies %}<form method="post" class="form-grid">
+<label>Policy<select name="policy_id" required><option value="">Select policy</option>{% for p in policies %}<option value="{{ p.id }}">{{ p.policy_name }} — {{ p.full_name }}</option>{% endfor %}</select></label>
+<label>Claim date<input name="claim_date" type="date" required></label>
+<label>Claim amount (₹)<input name="amount" type="number" min="0" step="0.01" required placeholder="5000"></label>
+<label>Claim reason<input name="reason" required placeholder="Briefly describe the incident"></label>
+<label>Initial status<select name="status"><option>Pending</option><option>Approved</option><option>Rejected</option></select></label>
+<div class="form-actions"><button class="btn btn-primary" type="submit">＋ Submit Claim</button></div>
+</form>{% else %}<p class="empty">Create a policy before submitting a claim.</p>{% endif %}</section>
+<section class="content-card"><div class="section-head"><div><h3>Claims Register</h3><p>{{ claims|length }} claim record(s)</p></div></div><div class="table-wrap"><table><thead><tr><th>CLAIM ID</th><th>CUSTOMER</th><th>POLICY</th><th>DATE</th><th>AMOUNT</th><th>REASON</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody>
+{% for c in claims %}<tr><td class="muted">#CL-{{ "%03d"|format(c.id) }}</td><td class="strong">{{ c.full_name }}</td><td>{{ c.policy_name }}</td><td>{{ c.claim_date }}</td><td class="strong">₹{{ "%.2f"|format(c.amount) }}</td><td>{{ c.reason }}</td><td><form method="post" action="{{ url_for('update_claim_status', claim_id=c.id) }}" class="inline-form"><select name="status" aria-label="Claim status">{% for s in ['Pending','Approved','Rejected'] %}<option {{ 'selected' if c.status == s else '' }}>{{ s }}</option>{% endfor %}</select><button class="btn-small" type="submit">Save</button></form></td><td><form method="post" action="{{ url_for('delete_claim', claim_id=c.id) }}" onsubmit="return confirm('Delete this claim?')"><button class="btn-delete" type="submit">Delete</button></form></td></tr>{% else %}<tr><td colspan="8" class="empty">No claims found.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

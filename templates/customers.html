@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Customers{% endblock %}{% block heading %}Customers{% endblock %}
+{% block content %}
+<div class="page-intro"><p>Maintain customer details and contact information.</p></div>
+<section class="content-card form-card"><div class="section-head"><div><h3>Add New Customer</h3><p>Enter the customer information below</p></div><span class="mini-label">CUSTOMER FORM</span></div>
+<form method="post" class="form-grid">
+<label>Full name<input name="full_name" required placeholder="e.g. Karthik Kumar"></label>
+<label>Email address<input name="email" type="email" required placeholder="name@example.com"></label>
+<label>Phone number<input name="phone" required pattern="[0-9+() -]{7,20}" placeholder="9876543210"></label>
+<label>Address<input name="address" required placeholder="City, State"></label>
+<div class="form-actions"><button class="btn btn-primary" type="submit">＋ Add Customer</button></div>
+</form></section>
+<section class="content-card"><div class="section-head"><div><h3>Customer Directory</h3><p>{{ customers|length }} registered customer(s)</p></div></div><div class="table-wrap"><table><thead><tr><th>ID</th><th>FULL NAME</th><th>EMAIL</th><th>PHONE</th><th>ADDRESS</th><th>ACTION</th></tr></thead><tbody>
+{% for c in customers %}<tr><td class="muted">#{{ "%03d"|format(c.id) }}</td><td class="strong">{{ c.full_name }}</td><td>{{ c.email }}</td><td>{{ c.phone }}</td><td>{{ c.address }}</td><td><form method="post" action="{{ url_for('delete_customer', customer_id=c.id) }}" onsubmit="return confirm('Delete this customer and all associated policies and claims?')"><button class="btn-delete" type="submit">Delete</button></form></td></tr>{% else %}<tr><td colspan="6" class="empty">No customers found.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

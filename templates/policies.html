@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Policies{% endblock %}{% block heading %}Insurance Policies{% endblock %}
+{% block content %}
+<div class="page-intro"><p>Create and manage customer insurance policies.</p></div>
+<section class="content-card form-card"><div class="section-head"><div><h3>Create Policy</h3><p>Assign a policy to a registered customer</p></div><span class="mini-label">POLICY FORM</span></div>
+{% if customers %}<form method="post" class="form-grid">
+<label>Customer<select name="customer_id" required><option value="">Select customer</option>{% for c in customers %}<option value="{{ c.id }}">{{ c.full_name }}</option>{% endfor %}</select></label>
+<label>Policy name<input name="policy_name" required placeholder="e.g. Family Health Secure"></label>
+<label>Policy type<select name="policy_type" required><option value="">Select type</option><option>Health</option><option>Life</option><option>Vehicle</option><option>Home</option><option>Travel</option></select></label>
+<label>Premium amount (₹)<input name="premium" type="number" min="0" step="0.01" required placeholder="10000"></label>
+<label>Start date<input name="start_date" type="date" required></label><label>End date<input name="end_date" type="date" required></label>
+<label>Status<select name="status"><option>Active</option><option>Expired</option><option>Cancelled</option></select></label>
+<div class="form-actions"><button class="btn btn-primary" type="submit">＋ Create Policy</button></div>
+</form>{% else %}<p class="empty">Add a customer before creating a policy.</p>{% endif %}</section>
+<section class="content-card"><div class="section-head"><div><h3>Policy Register</h3><p>{{ policies|length }} policy record(s)</p></div></div><div class="table-wrap"><table><thead><tr><th>POLICY ID</th><th>POLICY NAME</th><th>CUSTOMER</th><th>TYPE</th><th>PREMIUM</th><th>VALIDITY</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody>
+{% for p in policies %}<tr><td class="muted">#PL-{{ "%03d"|format(p.id) }}</td><td class="strong">{{ p.policy_name }}</td><td>{{ p.full_name }}</td><td><span class="type-pill">{{ p.policy_type }}</span></td><td class="strong">₹{{ "%.2f"|format(p.premium) }}</td><td>{{ p.start_date }}<br><small class="muted">to {{ p.end_date }}</small></td><td><span class="badge {{ p.status|lower }}">{{ p.status }}</span></td><td><form method="post" action="{{ url_for('delete_policy', policy_id=p.id) }}" onsubmit="return confirm('Delete this policy and its claims?')"><button class="btn-delete" type="submit">Delete</button></form></td></tr>{% else %}<tr><td colspan="8" class="empty">No policies found.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

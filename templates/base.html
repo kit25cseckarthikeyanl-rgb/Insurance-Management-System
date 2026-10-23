@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}InsureCare{% endblock %} | Insurance Management System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">✦</span><div><strong>InsureCare</strong><small>Management Portal</small></div></div>
+    <div class="nav-label">WORKSPACE</div>
+    <nav>
+      <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint == 'dashboard' else '' }}">▦ <span>Dashboard</span></a>
+      <a href="{{ url_for('customers') }}" class="{{ 'active' if request.endpoint == 'customers' else '' }}">♙ <span>Customers</span></a>
+      <a href="{{ url_for('policies') }}" class="{{ 'active' if request.endpoint == 'policies' else '' }}">▤ <span>Insurance Policies</span></a>
+      <a href="{{ url_for('claims') }}" class="{{ 'active' if request.endpoint == 'claims' else '' }}">◈ <span>Claims</span></a>
+    </nav>
+    <div class="sidebar-bottom"><div class="avatar">AD</div><div><strong>Administrator</strong><small>Project Demo</small></div></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><span class="eyebrow">INSURANCE OPERATIONS</span><h1>{% block heading %}Dashboard{% endblock %}</h1></div><div class="top-right"><span class="status-dot"></span> System Online <span class="top-avatar">AD</span></div></header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}<div class="flash-wrap">{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+    <footer>Insurance Management System <span>•</span> DBMS Academic Project</footer>
+  </main>
+</body>
+</html>
